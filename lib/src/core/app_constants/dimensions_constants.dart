@@ -4,6 +4,6 @@ class DimensionsConstants {
   static const double paddingLarge = 32.0;
 
   static const double fontSmall = 12.0;
-  static const double fontMedium = 16.0;
+  static const double fontMedium = 18.0;
   static const double fontLarge = 20.0;
 }

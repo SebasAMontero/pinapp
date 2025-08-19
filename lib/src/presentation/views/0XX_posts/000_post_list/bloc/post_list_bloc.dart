@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinapp/src/data/models/pin_comment_model.dart';
 import 'package:pinapp/src/data/models/pin_post_model.dart';
 import 'package:pinapp/src/domain/repositories/post_repository.dart';
 
@@ -13,8 +14,10 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     : _postRepository = postRepository,
       super(PostListState()) {
     on<GetPostListEvent>(_fetchPostList);
+    on<GetPostCommentEvent>(_fetchPostDetail);
+    on<TogglePostLikeEvent>(_togglePostLike);
   }
-
+  // TODO Add pagination
   Future<void> _fetchPostList(
     GetPostListEvent event,
     Emitter<PostListState> emit,
@@ -29,5 +32,39 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     } catch (e) {
       emit(state.copyWith(hasError: true, isLoading: false));
     }
+  }
+
+  Future<void> _fetchPostDetail(
+    GetPostCommentEvent event,
+    Emitter<PostListState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final pinPostId = event.pinPost.id;
+      final pinComments = await _postRepository.getPinPostCommentsById(
+        postId: pinPostId,
+      );
+
+      emit(
+        state.copyWith(
+          pinComments: pinComments,
+          hasError: false,
+          isLoading: false,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(hasError: true, isLoading: false));
+    }
+  }
+
+  void _togglePostLike(TogglePostLikeEvent event, Emitter<PostListState> emit) {
+    final updatedPosts = state.pinPosts.map((post) {
+      if (post.id == event.postId) {
+        return post.copyWith(isLiked: !post.isLiked);
+      }
+      return post;
+    }).toList();
+
+    emit(state.copyWith(pinPosts: updatedPosts));
   }
 }

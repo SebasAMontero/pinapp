@@ -28,4 +28,20 @@ class PinCommentModel extends PinComment {
       'body': body,
     };
   }
+
+  PinCommentModel copyWith({
+    int? postId,
+    int? id,
+    String? name,
+    String? email,
+    String? body,
+  }) {
+    return PinCommentModel(
+      postId: postId ?? this.postId,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      body: body ?? this.body,
+    );
+  }
 }

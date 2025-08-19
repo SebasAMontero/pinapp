@@ -3,20 +3,13 @@ class PinPost {
   final int userId;
   final String title;
   final String body;
+  final bool isLiked;
 
   const PinPost({
     required this.id,
     required this.userId,
     required this.title,
     required this.body,
+    this.isLiked = false,
   });
-
-  PinPost copyWith({int? id, int? userId, String? title, String? body}) {
-    return PinPost(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      title: title ?? this.title,
-      body: body ?? this.body,
-    );
-  }
 }

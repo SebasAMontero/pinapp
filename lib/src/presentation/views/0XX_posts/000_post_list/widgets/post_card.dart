@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pinapp/src/core/app_constants/app_constants.dart';
 import 'package:pinapp/src/data/models/pin_post_model.dart';
 
 class PostCard extends StatelessWidget {
@@ -20,7 +21,15 @@ class PostCard extends StatelessWidget {
         ),
         title: Text(
           post.title,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          style: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 16,
+            color: ColorConstants.accent,
+          ),
+        ),
+        trailing: Icon(
+          post.isLiked ? Icons.favorite : Icons.favorite_border,
+          color: post.isLiked ? Colors.red : Colors.grey,
         ),
         subtitle: Text(post.body, maxLines: 2, overflow: TextOverflow.ellipsis),
         onTap: onTap,

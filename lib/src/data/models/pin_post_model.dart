@@ -6,6 +6,7 @@ class PinPostModel extends PinPost {
     required super.userId,
     required super.title,
     required super.body,
+    super.isLiked = false,
   });
 
   factory PinPostModel.fromJson(Map<String, dynamic> json) {
@@ -19,5 +20,21 @@ class PinPostModel extends PinPost {
 
   Map<String, dynamic> toJson() {
     return {'id': id, 'userId': userId, 'title': title, 'body': body};
+  }
+
+  PinPostModel copyWith({
+    int? id,
+    int? userId,
+    String? title,
+    String? body,
+    bool? isLiked,
+  }) {
+    return PinPostModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      isLiked: isLiked ?? this.isLiked,
+    );
   }
 }
