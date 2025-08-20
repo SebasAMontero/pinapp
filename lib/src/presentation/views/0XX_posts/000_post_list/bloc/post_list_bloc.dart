@@ -1,0 +1,86 @@
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinapp/src/core/app_constants/app_constants.dart';
+import 'package:pinapp/src/data/models/pin_comment_model.dart';
+import 'package:pinapp/src/data/models/pin_post_model.dart';
+import 'package:pinapp/src/domain/repositories/post_repository.dart';
+
+part 'post_list_event.dart';
+part 'post_list_state.dart';
+
+class PostListBloc extends Bloc<PostListEvent, PostListState> {
+  final PostRepository _postRepository;
+
+  PostListBloc({required PostRepository postRepository})
+    : _postRepository = postRepository,
+      super(PostListState()) {
+    on<GetPostListEvent>(_fetchPosts);
+    on<GetPostCommentEvent>(_fetchPostDetail);
+    on<TogglePostLikeEvent>(_togglePostLike);
+  }
+
+  /// Fetches posts from service
+  Future<void> _fetchPosts(
+    GetPostListEvent event,
+    Emitter<PostListState> emit,
+  ) async {
+    if (state.isLoading || !state.hasMore) return;
+    emit(state.copyWith(isLoading: true));
+
+    try {
+      final nextPage = state.currentPage;
+      final pinPosts = await _postRepository.getPinPostList(
+        page: nextPage,
+        limit: ApiConstants.postsPerPage,
+      );
+      final hasMore = pinPosts.length == ApiConstants.postsPerPage;
+      emit(
+        state.copyWith(
+          pinPosts: [...state.pinPosts, ...pinPosts],
+          hasError: false,
+          isLoading: false,
+          currentPage: nextPage + 1,
+          hasMore: hasMore,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(hasError: true, isLoading: false));
+    }
+  }
+
+  /// Fetches post comments from service
+  Future<void> _fetchPostDetail(
+    GetPostCommentEvent event,
+    Emitter<PostListState> emit,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    try {
+      final pinPostId = event.pinPost.id;
+      final pinComments = await _postRepository.getPinPostCommentsById(
+        postId: pinPostId,
+      );
+
+      emit(
+        state.copyWith(
+          pinComments: pinComments,
+          hasError: false,
+          isLoading: false,
+        ),
+      );
+    } catch (e) {
+      emit(state.copyWith(hasError: true, isLoading: false));
+    }
+  }
+
+  /// Toggles the bool isLiked of a post
+  void _togglePostLike(TogglePostLikeEvent event, Emitter<PostListState> emit) {
+    final updatedPosts = state.pinPosts.map((post) {
+      if (post.id == event.postId) {
+        return post.copyWith(isLiked: !post.isLiked);
+      }
+      return post;
+    }).toList();
+
+    emit(state.copyWith(pinPosts: updatedPosts));
+  }
+}
