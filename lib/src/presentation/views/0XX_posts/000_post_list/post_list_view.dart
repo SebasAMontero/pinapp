@@ -48,7 +48,6 @@ class _PostListViewState extends State<PostListView> {
     );
   }
 
-  // TODO Add fetch scroll
   @override
   Widget build(BuildContext context) {
     return Scaffold(
