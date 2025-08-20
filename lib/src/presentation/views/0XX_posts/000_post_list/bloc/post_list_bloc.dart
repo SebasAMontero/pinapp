@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:pinapp/src/core/app_constants/app_constants.dart';
 import 'package:pinapp/src/data/models/pin_comment_model.dart';
 import 'package:pinapp/src/data/models/pin_post_model.dart';
 import 'package:pinapp/src/domain/repositories/post_repository.dart';
@@ -17,17 +18,29 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     on<GetPostCommentEvent>(_fetchPostDetail);
     on<TogglePostLikeEvent>(_togglePostLike);
   }
-  // TODO Add pagination
+
   Future<void> _fetchPostList(
     GetPostListEvent event,
     Emitter<PostListState> emit,
   ) async {
+    if (state.isLoading || !state.hasMore) return;
     emit(state.copyWith(isLoading: true));
-    try {
-      final pinPosts = await _postRepository.getPinPostList();
 
+    try {
+      final nextPage = state.currentPage;
+      final pinPosts = await _postRepository.getPinPostList(
+        page: nextPage,
+        limit: ApiConstants.postsPerPage,
+      );
+      final hasMore = pinPosts.length == ApiConstants.postsPerPage;
       emit(
-        state.copyWith(pinPosts: pinPosts, hasError: false, isLoading: false),
+        state.copyWith(
+          pinPosts: [...state.pinPosts, ...pinPosts],
+          hasError: false,
+          isLoading: false,
+          currentPage: nextPage + 1,
+          hasMore: hasMore,
+        ),
       );
     } catch (e) {
       emit(state.copyWith(hasError: true, isLoading: false));

@@ -8,20 +8,22 @@ import 'package:pinapp/src/presentation/views/0XX_posts/000_post_list/widgets/po
 class PostsList extends StatelessWidget {
   final String searchQuery;
   final void Function(PinPostModel post) onPostTap;
+  final ScrollController? scrollController;
 
   const PostsList({
     super.key,
     required this.searchQuery,
     required this.onPostTap,
+    this.scrollController,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PostListBloc, PostListState>(
       builder: (context, state) {
-        if (state.isLoading) {
+        if (state.isLoading && state.pinPosts.isEmpty) {
           return const Center(child: CircularProgressIndicator());
-        } else if (state.hasError) {
+        } else if (state.hasError && state.pinPosts.isEmpty) {
           return Center(
             child: Text(
               StringConstants.errorPosts,
@@ -40,9 +42,19 @@ class PostsList extends StatelessWidget {
             .toList();
 
         return ListView.builder(
-          itemCount: filteredPosts.length,
+          controller: scrollController,
           padding: const EdgeInsets.all(DimensionsConstants.paddingMedium),
+          itemCount: state.hasMore
+              ? filteredPosts.length + 1
+              : filteredPosts.length,
           itemBuilder: (context, index) {
+            if (index >= filteredPosts.length) {
+              return const Padding(
+                padding: EdgeInsets.symmetric(vertical: 16),
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
             final post = filteredPosts[index];
             return PostCard(post: post, onTap: () => onPostTap(post));
           },

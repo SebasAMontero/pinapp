@@ -12,10 +12,15 @@ class PostRepositoryImpl implements PostRepository {
   PostRepositoryImpl({http.Client? client}) : client = client ?? http.Client();
 
   @override
-  Future<List<PinPostModel>> getPinPostList() async {
+  Future<List<PinPostModel>> getPinPostList({
+    int page = 1,
+    int limit = 10,
+  }) async {
     try {
       final response = await client.get(
-        Uri.parse('${ApiConstants.baseUrl}${ApiConstants.endpointPosts}'),
+        Uri.parse(
+          '${ApiConstants.baseUrl}${ApiConstants.endpointPosts}?_page=$page&_limit=$limit',
+        ),
         headers: {'Accept': 'application/json', 'User-Agent': 'FlutterApp'},
       );
 

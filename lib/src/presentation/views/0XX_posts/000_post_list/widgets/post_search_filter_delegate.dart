@@ -3,10 +3,10 @@ import 'package:pinapp/src/core/app_constants/app_constants.dart';
 import 'package:pinapp/src/data/models/pin_post_model.dart';
 import 'package:pinapp/src/presentation/views/0XX_posts/000_post_list/widgets/post_card.dart';
 
-class PostSearchFilter extends SearchDelegate {
+class PostSearchFilterDelegate extends SearchDelegate {
   final List<PinPostModel> posts;
 
-  PostSearchFilter(this.posts);
+  PostSearchFilterDelegate(this.posts);
 
   @override
   List<Widget>? buildActions(BuildContext context) {
@@ -49,7 +49,7 @@ class PostSearchFilter extends SearchDelegate {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
-          onTap: () => _navigateToPostDetail,
+          onTap: () => _navigateToPostDetail(context, post),
         );
       },
     );
