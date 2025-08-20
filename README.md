@@ -45,6 +45,8 @@
 - `flutter_bloc` – Bloc state management.  
 - `http` – HTTP client for network requests.  
 - `equatable` – For value equality in Bloc states.  
+- `mocktail` – For unit/ widget tests.  
+- `bloc_test` – For bloc tests.  
 
 > Run `flutter pub get` to install dependencies.
 
