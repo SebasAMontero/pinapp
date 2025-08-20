@@ -53,6 +53,7 @@ class _PostListViewState extends State<PostListView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(StringConstants.postsTitle),
+        automaticallyImplyLeading: false,
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
