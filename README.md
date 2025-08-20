@@ -13,6 +13,7 @@
 - Tap a post to view its details and comments.
 - Like/unlike posts, with the like status synchronized with the main list.
 - Infinite scroll for efficient post loading.
+- Custom Android native splash screen.
 
 ---
 
@@ -38,6 +39,7 @@
 - Infinite scroll with pagination is implemented for posts.
 - Search functionality uses a **SearchDelegate**.
 
+
 ---
 
 ## Dependencies
@@ -59,4 +61,4 @@ git clone <your-repo-url>
 2. **Install dependencies**  
 flutter pub get
 2. **Run the application**  
-flutter run``` 
+flutter run 
