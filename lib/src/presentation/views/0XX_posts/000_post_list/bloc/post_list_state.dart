@@ -5,7 +5,6 @@ class PostListState {
   final List<PinPostModel> pinPosts;
   final List<PinCommentModel> pinComments;
   final bool hasError;
-
   final int currentPage;
   final bool hasMore;
 

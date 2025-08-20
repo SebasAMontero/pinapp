@@ -14,12 +14,13 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
   PostListBloc({required PostRepository postRepository})
     : _postRepository = postRepository,
       super(PostListState()) {
-    on<GetPostListEvent>(_fetchPostList);
+    on<GetPostListEvent>(_fetchPosts);
     on<GetPostCommentEvent>(_fetchPostDetail);
     on<TogglePostLikeEvent>(_togglePostLike);
   }
 
-  Future<void> _fetchPostList(
+  /// Fetches posts from service
+  Future<void> _fetchPosts(
     GetPostListEvent event,
     Emitter<PostListState> emit,
   ) async {
@@ -47,6 +48,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     }
   }
 
+  /// Fetches post comments from service
   Future<void> _fetchPostDetail(
     GetPostCommentEvent event,
     Emitter<PostListState> emit,
@@ -70,6 +72,7 @@ class PostListBloc extends Bloc<PostListEvent, PostListState> {
     }
   }
 
+  /// Toggles the bool isLiked of a post
   void _togglePostLike(TogglePostLikeEvent event, Emitter<PostListState> emit) {
     final updatedPosts = state.pinPosts.map((post) {
       if (post.id == event.postId) {

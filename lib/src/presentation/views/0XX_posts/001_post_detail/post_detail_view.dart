@@ -26,7 +26,6 @@ class _PostDetailViewState extends State<PostDetailView> {
   Widget build(BuildContext context) {
     return BlocBuilder<PostListBloc, PostListState>(
       builder: (context, state) {
-        // Obtener el post actualizado del estado
         final post = state.pinPosts.firstWhere(
           (p) => p.id == widget.post.id,
           orElse: () => widget.post,
@@ -50,8 +49,6 @@ class _PostDetailViewState extends State<PostDetailView> {
                   },
                 ),
                 const SizedBox(height: 10),
-
-                const SizedBox(height: 20),
                 const Text(
                   StringConstants.comments,
                   style: TextStyle(
